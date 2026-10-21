@@ -1,2 +1,27 @@
 INFO:     127.0.0.1:53064 - "GET /healthz HTTP/1.1" 200 OK
 INFO:     192.168.68.112:53724 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     192.168.68.112:65066 - "GET /calendar.ics?token=c861d9418f2056e975c5de62dc692819 HTTP/1.1" 200 OK
+INFO:     192.168.68.109:57934 - "GET /calendar.ics?token=c861d9418f2056e975c5de62dc692819 HTTP/1.1" 200 OK
+INFO:     192.168.68.109:57935 - "GET /calendar.ics?token=c861d9418f2056e975c5de62dc692819 HTTP/1.1" 200 OK
+INFO:     192.168.68.109:57945 - "GET /calendar.ics?token=c861d9418f2056e975c5de62dc692819 HTTP/1.1" 200 OK
+INFO:     192.168.68.109:57948 - "GET /calendar.ics?token=c861d9418f2056e975c5de62dc692819 HTTP/1.1" 200 OK
+INFO:     100.120.246.47:0 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     100.120.246.47:0 - "GET /calendar.ics?token=c861d9418f2056e975c5de62dc692819 HTTP/1.1" 200 OK
+INFO:     100.120.246.47:0 - "GET /calendar.ics HTTP/1.1" 401 Unauthorized
+INFO:     100.120.246.47:0 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     100.120.246.47:0 - "GET /calendar.ics?token=c861d9418f2056e975c5de62dc692819 HTTP/1.1" 200 OK
+INFO:     147.185.226.16:0 - "GET / HTTP/1.1" 404 Not Found
+INFO:     180.191.162.204:0 - "GET /calendar.ics?token=c861d9418f2056e975c5de62dc692819 HTTP/1.1" 200 OK
+INFO:     180.191.162.204:0 - "GET /calendar.ics?token=c861d9418f2056e975c5de62dc692819 HTTP/1.1" 200 OK
+INFO:     180.191.162.204:0 - "GET /calendar.ics?token=c861d9418f2056e975c5de62dc692819 HTTP/1.1" 200 OK
+INFO:     180.191.162.204:0 - "GET /calendar.ics?token=c861d9418f2056e975c5de62dc692819 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61901 - "GET /calendar.ics?token=c861d9418f2056e975c5de62dc692819 HTTP/1.1" 200 OK
+INFO:     34.12.243.235:0 - "GET / HTTP/1.1" 404 Not Found
+INFO:     34.12.243.235:0 - "GET / HTTP/1.1" 404 Not Found
+INFO:     144.126.240.247:0 - "GET / HTTP/1.1" 404 Not Found
+INFO:     142.93.6.102:0 - "GET / HTTP/1.1" 404 Not Found
+INFO:     2604:a880:400:d1:0:5:3b79:9001:0 - "GET / HTTP/1.1" 404 Not Found
+INFO:     142.93.6.102:0 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     2604:a880:400:d1:0:5:3b79:9001:0 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     5.102.169.102:0 - "GET / HTTP/1.1" 404 Not Found
+INFO:     180.191.162.204:0 - "GET /calendar.ics?token=c861d9418f2056e975c5de62dc692819 HTTP/1.1" 200 OK

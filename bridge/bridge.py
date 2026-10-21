@@ -7,7 +7,7 @@ from tkinter import messagebox, scrolledtext
 import httpx
 
 from core import find_urls, load_config, log, log_lines, save_config, webcal_link
-from sender import post_link, replay_loop, toast_loop
+from sender import post_link, replay_loop, screen_loop, toast_loop
 
 
 def setup_window() -> dict | None:
@@ -82,6 +82,22 @@ def main_window(cfg: dict) -> None:
     for fn in (toast_loop, replay_loop):
         threading.Thread(target=fn, args=(cfg, stop), daemon=True).start()
     threading.Thread(target=clipboard_loop, args=(cfg, root, clip, stop), daemon=True).start()
+    screen_on = tk.BooleanVar(value=True)
+    tk.Checkbutton(root, text="Auto-read links from the open Viber window (keep Viber visible)",
+                   variable=screen_on).pack(anchor="w", padx=8)
+    tk.Label(root, text="Your 2 group chat names, separated by a comma (exactly as shown in Viber):").pack(anchor="w", padx=8)
+    chats_var = tk.StringVar(value=cfg.get("chats", ""))
+    row = tk.Frame(root)
+    row.pack(fill="x", padx=8)
+    tk.Entry(row, textvariable=chats_var, width=60).pack(side="left")
+
+    def save_chats():
+        cfg["chats"] = chats_var.get().strip()
+        save_config(cfg)
+        log(f"saved chats: {cfg['chats'] or '(none)'}")
+
+    tk.Button(row, text="Save", command=save_chats).pack(side="left", padx=6)
+    threading.Thread(target=screen_loop, args=(cfg, stop, screen_on.get, lambda: cfg.get("chats", "")), daemon=True).start()
     shown = 0
 
     def refresh():

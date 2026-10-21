@@ -12,6 +12,17 @@ def test_parse_toast():
     assert title == "Jisac Palacio" and "accessmba.com" in body
 
 
+def test_chat_matching():
+    pytest = __import__("pytest")
+    sr = pytest.importorskip("screenreader")
+    allowed = ["Manila Fam GC", "Work Events"]
+    assert sr.matches_chat("Manila Fam GC\n12 members", allowed) == "Manila Fam GC"
+    assert sr.matches_chat("manila fam gc", allowed) == "Manila Fam GC"
+    assert sr.matches_chat("Manila Farn GC", allowed) == "Manila Fam GC"  # OCR slip
+    assert sr.matches_chat("Random Chat\n3 members", allowed) is None
+    assert sr.matches_chat("anything", []) is None
+
+
 def test_webcal():
     cfg = {"server_url": "https://x.onrender.com/", "feed_token": "t"}
     assert webcal_link(cfg) == "webcal://x.onrender.com/calendar.ics?token=t"
