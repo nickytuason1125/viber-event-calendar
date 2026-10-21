@@ -5,4 +5,5 @@ dist/
 build/
 *.spec
 env_check.txt
+local_config.json
 .pytest_cache/

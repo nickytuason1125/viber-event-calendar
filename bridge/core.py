@@ -43,7 +43,7 @@ def save_config(cfg: dict) -> None:
 
 
 def webcal_link(cfg: dict) -> str:
-    host = re.sub(r"^https?://", "", cfg["server_url"].rstrip("/"))
+    host = re.sub(r"^https?://", "", (cfg.get("public_url") or cfg["server_url"]).rstrip("/"))
     return f"webcal://{host}/calendar.ics?token={cfg['feed_token']}"
 
 
