@@ -13,7 +13,8 @@ DATE_HINT = re.compile(
     rf"(\b{MONTHS}\.?\s+\d{{1,2}}\b|\b\d{{1,2}}\s+{MONTHS}\b|\b\d{{4}}-\d{{2}}-\d{{2}}\b|\b\d{{1,2}}/\d{{1,2}}/\d{{2,4}}\b)",
     re.IGNORECASE,
 )
-_TIME = r"(?:\s*(?:,|at|@)?\s*\d{1,2}(?::\d{2})?\s*(?:am|pm|AM|PM))?"
+_TIME = r"(?:\s*(?:,|at|@)?\s*(?:\d{1,2}:\d{2}(?:\s*(?:am|pm))?|\d{1,2}\s*(?:am|pm)))?"
+LONG_TOKEN = re.compile(r"\S{60,}")
 DATE_FULL = re.compile(
     rf"(?:\b{MONTHS}\.?\s+\d{{1,2}}(?:st|nd|rd|th)?(?:,?\s+\d{{4}})?{_TIME}"
     rf"|\b\d{{1,2}}(?:st|nd|rd|th)?\s+{MONTHS}\.?(?:,?\s+\d{{4}})?{_TIME}"
@@ -99,16 +100,20 @@ def _meta(soup: BeautifulSoup, *names) -> str | None:
 
 def _find_date(text: str, now: datetime) -> datetime | None:
     """Only trust matches that contain an explicit month name or numeric date."""
-    m = DATE_FULL.search(text)
-    if not m:
+    parsed = []
+    for m in list(DATE_FULL.finditer(text))[:15]:
+        snippet = re.sub(r"\s+(at|@|,)\s+", " ", m.group(0).strip(), flags=re.IGNORECASE)
+        d = dateparser.parse(
+            snippet,
+            languages=["en"],
+            settings={"PREFER_DATES_FROM": "future", "TIMEZONE": "Asia/Manila", "RETURN_AS_TIMEZONE_AWARE": True, "RELATIVE_BASE": now},
+        )
+        if d:
+            parsed.append(d)
+    if not parsed:
         return None
-    snippet = re.sub(r"\s+(at|@|,)\s+", " ", m.group(0).strip(), flags=re.IGNORECASE)
-    d = dateparser.parse(
-        snippet,
-        languages=["en"],
-        settings={"PREFER_DATES_FROM": "future", "TIMEZONE": "Asia/Manila", "RETURN_AS_TIMEZONE_AWARE": True, "RELATIVE_BASE": now},
-    )
-    return d
+    upcoming = [d for d in parsed if d >= now - timedelta(days=1)]
+    return (upcoming or parsed)[0]
 
 
 def extract_event(html: str, url: str, now: datetime | None = None) -> dict:
@@ -137,7 +142,8 @@ def extract_event(html: str, url: str, now: datetime | None = None) -> dict:
     for tag in soup(["script", "style", "nav", "footer", "noscript"]):
         tag.decompose()
     headings = " ".join(h.get_text(" ", strip=True) for h in soup.find_all(["h1", "h2", "h3"])[:8])
-    body = " ".join(soup.stripped_strings)[:1500]
+    # drop long encoded blobs (base64/JSON) that some CMS pages embed, then scan the readable text
+    body = LONG_TOKEN.sub(" ", " ".join(soup.stripped_strings))[:20000]
 
     if not start:
         for chunk in (title, description, headings, body):
